@@ -17,10 +17,6 @@ else
   for ((i = 0; i < ${#RESTORE_PATHS_ARR[@]}; i++)); do
     RESTORE_PATH="${RESTORE_PATHS_ARR[$i]}"
 
-    if [ -z "${RESTORE_PATH}" ] ; then
-
-    fi
-
     echo "processing restore path ${RESTORE_PATH}"
 
     MAX_LEVEL=$(plugin_read_config RESTORE 'no')
