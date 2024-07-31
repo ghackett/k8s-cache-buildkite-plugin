@@ -8,14 +8,14 @@ DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 # shellcheck source=lib/compression.bash
 . "${DIR}/../lib/compression.bash"
 
-CACHE_PATHS_ARR=$(plugin_read_list PATHS)
+plugin_read_list_into_result PATHS
 
-if [[ ${#CACHE_PATHS_ARR[@]} == 0 ]]; then
+if [[ ${#result[@]} == 0 ]]; then
   echo "+++ 🚨 Missing paths option in the cache plugin to save"
   exit 1
 else
-  for ((i = 0; i < ${#CACHE_PATHS_ARR[@]}; i++)); do
-    CACHE_PATH="${CACHE_PATHS_ARR[$i]}"
+  for ((i = 0; i < ${#result[@]}; i++)); do
+    CACHE_PATH="${result[$i]}"
 
     echo "processing cache path ${CACHE_PATH}"
 
