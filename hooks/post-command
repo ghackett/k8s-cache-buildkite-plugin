@@ -21,6 +21,8 @@ else
       exit 1
     fi
 
+    echo "processing cache path ${CACHE_PATH}"
+
     LEVEL=$(plugin_read_config SAVE 'no')
     if [ "${LEVEL}" = 'no' ]; then
       echo 'Cache not setup for saving'
