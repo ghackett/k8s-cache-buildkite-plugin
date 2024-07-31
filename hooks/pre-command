@@ -8,14 +8,14 @@ DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 # shellcheck source=lib/compression.bash
 . "${DIR}/../lib/compression.bash"
 
-RESTORE_PATHS_ARR=$(plugin_read_list PATHS)
+plugin_read_list_into_result PATHS
 
-if [[ ${#RESTORE_PATHS_ARR[@]} == 0 ]]; then
+if [[ ${#result[@]} == 0 ]]; then
   echo "+++ 🚨 Missing paths option in the cache plugin to restore"
   exit 1
 else
-  for ((i = 0; i < ${#RESTORE_PATHS_ARR[@]}; i++)); do
-    RESTORE_PATH="${RESTORE_PATHS_ARR[$i]}"
+  for ((i = 0; i < ${#result[@]}; i++)); do
+    RESTORE_PATH="${result[$i]}"
 
     echo "processing restore path ${RESTORE_PATH}"
 
