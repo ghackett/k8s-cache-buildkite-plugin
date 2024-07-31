@@ -11,15 +11,11 @@ DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 CACHE_PATHS_ARR=$(plugin_read_list PATHS)
 
 if [[ ${#CACHE_PATHS_ARR[@]} == 0 ]]; then
-  echo "no paths array found"
+  echo "+++ 🚨 Missing paths option in the cache plugin to save"
+  exit 1
 else
   for ((i = 0; i < ${#CACHE_PATHS_ARR[@]}; i++)); do
     CACHE_PATH="${CACHE_PATHS_ARR[$i]}"
-
-    if [ -z "${CACHE_PATH}" ] ; then
-      echo "+++ 🚨 Missing path option in the cache plugin to save"
-      exit 1
-    fi
 
     echo "processing cache path ${CACHE_PATH}"
 

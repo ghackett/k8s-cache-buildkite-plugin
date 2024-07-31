@@ -11,14 +11,14 @@ DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 RESTORE_PATHS_ARR=$(plugin_read_list PATHS)
 
 if [[ ${#RESTORE_PATHS_ARR[@]} == 0 ]]; then
-  echo "no paths array found"
+  echo "+++ 🚨 Missing paths option in the cache plugin to restore"
+  exit 1
 else
   for ((i = 0; i < ${#RESTORE_PATHS_ARR[@]}; i++)); do
     RESTORE_PATH="${RESTORE_PATHS_ARR[$i]}"
 
     if [ -z "${RESTORE_PATH}" ] ; then
-      echo "+++ 🚨 Missing path option in the cache plugin to restore"
-      exit 1
+
     fi
 
     echo "processing restore path ${RESTORE_PATH}"
