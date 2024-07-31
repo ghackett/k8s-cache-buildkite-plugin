@@ -18,6 +18,10 @@ else
     CACHE_PATH="${result[$i]}"
 
     echo "processing cache path ${CACHE_PATH}"
+    if ! stat $CACHE_PATH; then
+      echo "path does not exist, skipping"
+      continue
+    fi
 
     LEVEL=$(plugin_read_config SAVE 'no')
     if [ "${LEVEL}" = 'no' ]; then
