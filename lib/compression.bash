@@ -53,7 +53,7 @@ uncompress() {
   echo "Cache is compressed, uncompressing with ${COMPRESSION}..."
 
   if [ "${COMPRESSION}" = 'tgz' ]; then
-    tar xzf "${FILE}" --verbose
+    tar xzf "${FILE}"
   elif [ "${COMPRESSION}" = 'zip' ]; then
     # because ZIP complains if the file does not end with .zip
     mv "${FILE}" "${FILE}.zip"
