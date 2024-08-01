@@ -55,7 +55,7 @@ else
           backend_exec get "${KEY}" "${RESTORE_PATH}"
         fi
 
-        exit 0
+        continue
       elif [ "${CURRENT_LEVEL}" = "${MAX_LEVEL}" ]; then
         echo "Cache miss up to ${CURRENT_LEVEL}-level, sorry"
         break
