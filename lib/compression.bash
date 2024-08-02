@@ -45,7 +45,7 @@ compress() {
 
 uncompress() {
   local FILE="$1"
-  local _RESTORE_PATH="$2" # pretty sure this is not necessary
+  local _RESTORE_PATH="$2" 
 
   local COMPRESSION=''
   COMPRESSION="$(plugin_read_config COMPRESSION 'none')"
