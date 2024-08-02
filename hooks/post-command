@@ -8,36 +8,49 @@ DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 # shellcheck source=lib/compression.bash
 . "${DIR}/../lib/compression.bash"
 
-CACHE_PATH=$(plugin_read_config PATH)
+echo "Got exit status $BUILDKITE_COMMAND_EXIT_STATUS"
 
-if [ -z "${CACHE_PATH}" ] ; then
-  echo "+++ 🚨 Missing path option in the cache plugin to save"
+plugin_read_list_into_result PATHS
+
+if [[ ${#result[@]} == 0 ]]; then
+  echo "+++ 🚨 Missing paths option in the cache plugin to save"
   exit 1
-fi
-
-LEVEL=$(plugin_read_config SAVE 'no')
-if [ "${LEVEL}" = 'no' ]; then
-  echo 'Cache not setup for saving'
-  exit 0
-elif [ "${LEVEL}" = 'file' ] && [ -z "$(plugin_read_config MANIFEST)" ]; then
-  echo "+++ 🚨 Missing manifest option in the cache plugin for file-level saving"
-  exit 1
-fi
-
-COMPRESS=$(plugin_read_config COMPRESSION 'none')
-if ! validate_compression "${COMPRESS}"; then
-  echo "+++ 🚨 Invalid value for compression option"
-  exit 1
-fi
-
-KEY=$(build_key "${LEVEL}" "${CACHE_PATH}" "${COMPRESS}")
-
-if compression_active; then
-  ACTUAL_PATH=$(mktemp)
-  compress "${CACHE_PATH}" "${ACTUAL_PATH}"
 else
-  ACTUAL_PATH="${CACHE_PATH}"
-fi
+  for ((i = 0; i < ${#result[@]}; i++)); do
+    CACHE_PATH="${result[$i]}"
 
-echo "Saving ${LEVEL}-level cache of ${CACHE_PATH}"
-backend_exec save "${KEY}" "${ACTUAL_PATH}"
+    echo "processing cache path ${CACHE_PATH}"
+    if ! stat $CACHE_PATH; then
+      echo "path does not exist, skipping"
+      continue
+    fi
+
+    LEVEL=$(plugin_read_config SAVE 'no')
+    if [ "${LEVEL}" = 'no' ]; then
+      echo 'Cache not setup for saving'
+      exit 0
+    elif [ "${LEVEL}" = 'file' ] && [ -z "$(plugin_read_config MANIFEST)" ]; then
+      echo "+++ 🚨 Missing manifest option in the cache plugin for file-level saving"
+      exit 1
+    fi
+
+    COMPRESS=$(plugin_read_config COMPRESSION 'none')
+    if ! validate_compression "${COMPRESS}"; then
+      echo "+++ 🚨 Invalid value for compression option"
+      exit 1
+    fi
+
+    KEY=$(build_key "${LEVEL}" "${CACHE_PATH}" "${COMPRESS}")
+
+    if compression_active; then
+      ACTUAL_PATH=$(mktemp)
+      compress "${CACHE_PATH}" "${ACTUAL_PATH}"
+    else
+      ACTUAL_PATH="${CACHE_PATH}"
+    fi
+
+    echo "Saving ${LEVEL}-level cache of ${CACHE_PATH}"
+    backend_exec save "${KEY}" "${ACTUAL_PATH}"
+
+  done
+fi
