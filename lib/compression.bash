@@ -57,7 +57,7 @@ uncompress() {
     if [[ "$_RESTORE_PATH" == "/"* ]]; then
       extraParams="-C /"
     fi
-    tar xzf "${FILE}" $extraParams
+    tar xzf "${FILE}" --overwrite $extraParams
   elif [ "${COMPRESSION}" = 'zip' ]; then
     local extraParams=""
     if [[ "$_RESTORE_PATH" == "/"* ]]; then
