@@ -53,10 +53,18 @@ uncompress() {
   echo "Cache is compressed, uncompressing with ${COMPRESSION}..."
 
   if [ "${COMPRESSION}" = 'tgz' ]; then
-    tar xzf "${FILE}"
+    local extraParams=""
+    if [[ "$_RESTORE_PATH" == "/"* ]]; then
+      extraParams="-C /"
+    fi
+    tar xzf "${FILE}" $extraParams
   elif [ "${COMPRESSION}" = 'zip' ]; then
+    local extraParams=""
+    if [[ "$_RESTORE_PATH" == "/"* ]]; then
+      extraParams="-d /"
+    fi
     # because ZIP complains if the file does not end with .zip
     mv "${FILE}" "${FILE}.zip"
-    unzip -o "${FILE}.zip"
+    unzip -o "${FILE}.zip" $extraParams
   fi
 }
