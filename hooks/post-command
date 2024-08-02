@@ -8,7 +8,10 @@ DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 # shellcheck source=lib/compression.bash
 . "${DIR}/../lib/compression.bash"
 
-echo "Got exit status $BUILDKITE_COMMAND_EXIT_STATUS"
+if [[ $BUILDKITE_COMMAND_EXIT_STATUS != 0 ]]; then
+  echo "Command failed, skipping cache save"
+  exit 0
+fi
 
 plugin_read_list_into_result PATHS
 
